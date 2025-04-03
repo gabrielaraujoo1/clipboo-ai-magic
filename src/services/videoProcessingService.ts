@@ -1,9 +1,9 @@
-
 import { toast } from "sonner";
 
 // Processing steps
 export enum ProcessingStep {
   DOWNLOADING = "downloading",
+  UPLOADING = "uploading",
   TRANSCRIBING = "transcribing",
   ANALYZING = "analyzing",
   EDITING = "editing",
@@ -105,7 +105,7 @@ export const processVideoFile = async (file: File, onStatusUpdate: (status: Proc
       onStatusUpdate
     );
 
-    // Subsequent steps are the same
+    // Step 2: Transcription (simulated)
     await simulateProcessingStep(
       ProcessingStep.TRANSCRIBING,
       "Transcrevendo áudio com IA...",
@@ -113,6 +113,7 @@ export const processVideoFile = async (file: File, onStatusUpdate: (status: Proc
       onStatusUpdate
     );
 
+    // Step 3: Analyzing content (simulated)
     await simulateProcessingStep(
       ProcessingStep.ANALYZING,
       "Analisando conteúdo e identificando melhores momentos...",
@@ -120,6 +121,7 @@ export const processVideoFile = async (file: File, onStatusUpdate: (status: Proc
       onStatusUpdate
     );
 
+    // Step 4: Editing (simulated)
     await simulateProcessingStep(
       ProcessingStep.EDITING,
       "Criando cortes inteligentes...",
@@ -127,6 +129,7 @@ export const processVideoFile = async (file: File, onStatusUpdate: (status: Proc
       onStatusUpdate
     );
 
+    // Step 5: Exporting (simulated)
     await simulateProcessingStep(
       ProcessingStep.EXPORTING,
       "Exportando vídeos finalizados...",

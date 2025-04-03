@@ -1,17 +1,17 @@
-
 import React from "react";
-import { ProcessingStep, ProcessingStatus } from "@/services/videoProcessingService";
+import { ProcessingStep, type ProcessingStatus as ProcessingStatusType } from "@/services/videoProcessingService";
 import { Progress } from "@/components/ui/progress";
 import { FileVideo, Upload, FileText, Scissors, Subtitles, Download, CheckCircle, X, Loader2 } from "lucide-react";
 
 interface ProcessingStatusProps {
-  status: ProcessingStatus;
+  status: ProcessingStatusType;
 }
 
 const ProcessingStatus: React.FC<ProcessingStatusProps> = ({ status }) => {
   const getStepIcon = (step: ProcessingStep) => {
     switch (step) {
       case ProcessingStep.DOWNLOADING:
+        return <Download className="h-6 w-6" />;
       case ProcessingStep.UPLOADING:
         return <Upload className="h-6 w-6" />;
       case ProcessingStep.TRANSCRIBING:
