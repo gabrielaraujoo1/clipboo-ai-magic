@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Video, Link as LinkIcon, Upload, X } from "lucide-react";
 import { toast } from "sonner";
+import { processYoutubeVideo, processVideoFile, ProcessingStatus, ProcessingStep } from "@/services/videoProcessingService";
+import ProcessingStatus from "@/components/ProcessingStatus";
 
 const VideoUploader = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,8 +13,9 @@ const VideoUploader = () => {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isUrlValid, setIsUrlValid] = useState<boolean | null>(null);
+  const [processingStatus, setProcessingStatus] = useState<ProcessingStatus | null>(null);
 
-  const handleYoutubeSubmit = (e: React.FormEvent) => {
+  const handleYoutubeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validação simples da URL do YouTube
@@ -27,12 +30,28 @@ const VideoUploader = () => {
     setIsUrlValid(true);
     setIsLoading(true);
     
-    // Simular processamento
-    setTimeout(() => {
+    try {
+      // Process the YouTube video
+      await processYoutubeVideo(youtubeUrl, (status) => {
+        setProcessingStatus(status);
+        
+        // When completed, show a success toast
+        if (status.step === ProcessingStep.COMPLETED) {
+          toast.success("Vídeo processado com sucesso!");
+          setIsLoading(false);
+        }
+        
+        // If there's an error, show an error toast
+        if (status.step === ProcessingStep.ERROR) {
+          toast.error("Erro ao processar o vídeo. Tente novamente.");
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error("Error processing video:", error);
+      toast.error("Erro ao processar o vídeo. Tente novamente.");
       setIsLoading(false);
-      toast.success("Vídeo do YouTube enviado com sucesso!");
-      // Aqui você redirecionaria para o dashboard ou página de processamento
-    }, 2000);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,20 +77,41 @@ const VideoUploader = () => {
     setFile(null);
   };
 
-  const handleFileSubmit = () => {
+  const handleFileSubmit = async () => {
     if (!file) return;
     
     setIsLoading(true);
     
-    // Simular upload
-    setTimeout(() => {
+    try {
+      // Process the file
+      await processVideoFile(file, (status) => {
+        setProcessingStatus(status);
+        
+        // When completed, show a success toast
+        if (status.step === ProcessingStep.COMPLETED) {
+          toast.success("Vídeo processado com sucesso!");
+          setIsLoading(false);
+        }
+        
+        // If there's an error, show an error toast
+        if (status.step === ProcessingStep.ERROR) {
+          toast.error("Erro ao processar o vídeo. Tente novamente.");
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error("Error processing video:", error);
+      toast.error("Erro ao processar o vídeo. Tente novamente.");
       setIsLoading(false);
-      toast.success("Vídeo enviado com sucesso!");
-      // Aqui você redirecionaria para o dashboard ou página de processamento
-    }, 2000);
+    }
   };
 
   const renderUploadOption = () => {
+    // If we're currently processing a video, show the processing status
+    if (processingStatus) {
+      return <ProcessingStatus status={processingStatus} />;
+    }
+
     if (uploadType === "link") {
       return (
         <div className="mt-6 animate-fade-up">

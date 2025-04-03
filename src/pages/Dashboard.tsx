@@ -1,10 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import VideoUploader from "@/components/VideoUploader";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Clock, Grid, Plus, Settings, Video } from "lucide-react";
+import { ProcessingStep } from "@/services/videoProcessingService";
 
 // Projetos de exemplo
 const mockProjects = [
@@ -48,6 +49,26 @@ const mockProjects = [
 
 const Dashboard = () => {
   const [showUploader, setShowUploader] = useState(false);
+  const [projects, setProjects] = useState(mockProjects);
+
+  // Function to add a new project when processing is complete
+  const handleProcessingComplete = (thumbnailUrl: string, title: string = "Novo Projeto") => {
+    const newProject = {
+      id: projects.length + 1,
+      title,
+      status: "Concluído",
+      thumbnail: thumbnailUrl,
+      date: `Hoje às ${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, '0')}`,
+      stats: {
+        duration: "3:45",
+        clips: 5,
+        views: 0
+      }
+    };
+    
+    setProjects([newProject, ...projects]);
+    setShowUploader(false);
+  };
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -125,7 +146,7 @@ const Dashboard = () => {
 
               <TabsContent value="all" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mockProjects.map((project) => (
+                  {projects.map((project) => (
                     <div
                       key={project.id}
                       className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
@@ -184,7 +205,7 @@ const Dashboard = () => {
 
               <TabsContent value="processing">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mockProjects
+                  {projects
                     .filter((p) => p.status === "Processando")
                     .map((project) => (
                       <div
@@ -223,7 +244,7 @@ const Dashboard = () => {
 
               <TabsContent value="completed">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mockProjects
+                  {projects
                     .filter((p) => p.status === "Concluído")
                     .map((project) => (
                       <div
