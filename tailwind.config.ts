@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,11 +85,63 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-up': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'fade-down': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(-10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-soft': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.8'
+					}
+				},
+				'scale-up': {
+					'0%': {
+						transform: 'scale(0.95)'
+					},
+					'100%': {
+						transform: 'scale(1)'
+					}
+				},
+				'gradient-shift': {
+					'0%': {
+						backgroundPosition: '0% 50%'
+					},
+					'50%': {
+						backgroundPosition: '100% 50%'
+					},
+					'100%': {
+						backgroundPosition: '0% 50%'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-up': 'fade-up 0.6s ease-out',
+				'fade-down': 'fade-down 0.6s ease-out',
+				'pulse-soft': 'pulse-soft 3s infinite ease-in-out',
+				'scale-up': 'scale-up 0.3s ease-out',
+				'gradient-shift': 'gradient-shift 10s ease infinite'
 			}
 		}
 	},
